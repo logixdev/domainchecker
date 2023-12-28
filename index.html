@@ -26,6 +26,14 @@
             background-color: #f4f4f4;
         }
 
+        footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            padding: 10px;
+        }
+
         #domainForm {
             text-align: center;
         }
@@ -48,10 +56,6 @@
         .unavailable {
             color: red;
         }
-        footer {
-            margin-top: 20px;
-            padding: 10px;
-        }
     </style>
 </head>
 <body>
@@ -63,9 +67,10 @@
     <button onclick="checkDomainAvailability()">Sprawdź dostępność</button>
     <div id="result"></div>
 </div>
-<footer>
-    &copy; Michał Kansy
-</footer>
+
+    <footer>
+        &copy; Michał Kansy
+    </footer>
 
 <script>
     function checkEnter(event) {
