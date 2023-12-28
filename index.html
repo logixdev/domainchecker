@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="pl-PL">
+<head>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-5LR0N8KNYB"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'G-5LR0N8KNYB');
+    </script>
+    <meta name="robots" content="noindex">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sprawdź dostępność domeny</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat">
+    <style>
+        body {
+            font-family: 'Montserrat', sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background-color: #f4f4f4;
+        }
+
+        #domainForm {
+            text-align: center;
+        }
+
+        #domainInput {
+            padding: 10px;
+            font-size: 16px;
+            margin-right: 10px;
+        }
+
+        #result {
+            margin-top: 10px;
+            font-size: 18px;
+        }
+
+        .available {
+            color: green;
+        }
+
+        .unavailable {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+
+<div id="domainForm">
+    <p>Na tej stronie możesz sprawdzić dostępność domeny o dowolnym rozszerzeniu.<br>Jeśli jest wolna, możesz ją zarejestrować u popularnego rejestratora np. <a href="https://www.ovhcloud.com/pl/" target="_blank">OVH</a>, jeśli zajęta, nie możesz tego zrobić.</p>
+    <label for="domainInput">Wprowadź nazwę domeny:</label>
+    <input type="text" id="domainInput" placeholder="logixdev.pl" onkeydown="checkEnter(event)">
+    <button onclick="checkDomainAvailability()">Sprawdź dostępność</button>
+    <div id="result"></div>
+</div>
+
+<script>
+    function checkEnter(event) {
+        if (event.key === "Enter") {
+            checkDomainAvailability();
+        }
+    }
+
+    function checkDomainAvailability() {
+        const input = document.getElementById("domainInput");
+        const resultDiv = document.getElementById("result");
+
+        const domainName = input.value.trim();
+        if (domainName === "") {
+            alert("Musisz wprowadzić nazwę domeny.");
+            return;
+        }
+
+        const apiUrl = "https://domainr.p.rapidapi.com/v2/status?mashape-key=34269813aamsha041f48f0401a5dp14f6a2jsnb1d9e3a03d71&domain=" + domainName;
+        fetch(apiUrl, {
+            method: "GET",
+            headers: {
+                "X-RapidAPI-Host": "domainr.p.rapidapi.com",
+                "X-RapidAPI-Key": "34269813aamsha041f48f0401a5dp14f6a2jsnb1d9e3a03d71"
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status[0].status === "inactive" || data.status[0].status === "undelegated inactive") {
+                resultDiv.innerHTML = "<p class='available'>Wolna!</p>";
+            } else if (data.status[0].status === "unknown") {
+                resultDiv.innerHTML = "<p class='unavailable'>Wystąpił błąd w pobraniu statusu domeny z API.</p>";
+            } else {
+                resultDiv.innerHTML = "<p class='unavailable'>Zajęta!</p>";
+            }
+        })
+        .catch(error => {
+            console.error("Błąd podczas sprawdzania dostępności domeny:", error);
+            resultDiv.innerHTML = "<p class='unavailable'>Błąd podczas sprawdzania dostępności domeny.</p>";
+        });
+    }
+</script>
+
+</body>
+</html>
