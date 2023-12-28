@@ -102,14 +102,14 @@
             if (data.status[0].status === "inactive" || data.status[0].status === "undelegated inactive") {
                 resultDiv.innerHTML = "<p class='available'>Wolna!</p>";
             } else if (data.status[0].status === "unknown") {
-                resultDiv.innerHTML = "<p class='unavailable'>Wystąpił błąd w pobraniu statusu domeny z API.</p>";
+                resultDiv.innerHTML = "<p class='unavailable'>Wystąpił błąd (rozszerzenie nie istnieje lub nie ma połączenia z API).</p>";
             } else {
                 resultDiv.innerHTML = "<p class='unavailable'>Zajęta!</p>";
             }
         })
         .catch(error => {
             console.error("Błąd podczas sprawdzania dostępności domeny:", error);
-            resultDiv.innerHTML = "<p class='unavailable'>Błąd podczas sprawdzania dostępności domeny.</p>";
+            resultDiv.innerHTML = "<p class='unavailable'>Wystąpił błąd (rozszerzenie nie istnieje lub nie ma połączenia z API).</p>";
         });
     }
 </script>
