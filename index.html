@@ -44,6 +44,12 @@
             margin-right: 10px;
         }
 
+        #loadingMessage {
+            display: none;
+            margin-top: 10px;
+            font-size: 18px;
+        }
+
         #result {
             margin-top: 10px;
             font-size: 18px;
@@ -65,6 +71,7 @@
     <label for="domainInput">Wprowadź nazwę domeny:</label>
     <input type="text" id="domainInput" placeholder="logixdev.pl" onkeydown="checkEnter(event)">
     <button onclick="checkDomainAvailability()">Sprawdź dostępność</button>
+    <div id="loadingMessage">Trwa sprawdzanie dostępności...</div>
     <div id="result"></div>
 </div>
 
@@ -82,6 +89,7 @@
     async function checkDomainAvailability() {
         const input = document.getElementById("domainInput");
         const resultDiv = document.getElementById("result");
+        const loadingMessage = document.getElementById("loadingMessage");
 
         const domainName = input.value.trim();
         if (domainName === "") {
@@ -89,20 +97,26 @@
             return;
         }
 
+        loadingMessage.style.display = "block";
+
         try {
             const response = await fetch(`/checkDomainAvailability?domain=${domainName}`);
             const data = await response.json();
 
-            if (data.status === "inactive" || data.status === "undelegated inactive") {
-                resultDiv.innerHTML = "<p class='available'>Wolna!</p>";
-            } else if (data.status === "unknown") {
-                resultDiv.innerHTML = "<p class='unavailable'>Wystąpił błąd (rozszerzenie nie istnieje lub nie ma połączenia z API).</p>";
-            } else {
-                resultDiv.innerHTML = "<p class='unavailable'>Zajęta!</p>";
+            loadingMessage.style.display = "none";
+
+            if (resultDiv) {
+                if (data.status === "inactive" || data.status === "undelegated inactive") {
+                    resultDiv.innerHTML = "<p class='available'>Wolna!</p>";
+                } else if (data.status === "unknown") {
+                    resultDiv.innerHTML = "<p class='unavailable'>Wystąpił błąd (rozszerzenie nie istnieje lub nie ma połączenia z API).</p>";
+                } else {
+                    resultDiv.innerHTML = "<p class='unavailable'>Zajęta!</p>";
+                }
             }
         } catch (error) {
             console.error("Błąd podczas sprawdzania dostępności domeny:", error);
-            resultDiv.innerHTML = "<p class='unavailable'>Wystąpił błąd (rozszerzenie nie istnieje lub nie ma połączenia z API).</p>";
+            loadingMessage.style.display = "none";
         }
     }
 </script>
