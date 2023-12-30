@@ -11,7 +11,7 @@ const checkReferer = (req, res, next) => {
 
   const referer = req.get('Referer');
   if (!referer || !referer.startsWith(allowedReferer)) {
-    console.log(`Odrzucono połączenie z niedozwolonego źródła: ${referer}`);
+    console.log(`Odrzucono połączenie z niedozwolonego źródła: ${referer}.`);
     res.status(403).send('Forbidden.');
     return;
   }
