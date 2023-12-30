@@ -72,15 +72,14 @@
         &copy; Michał Kansy
     </footer>
 
-<!-- Deprecated: API with secret should be secured. API key directly in JavaScript causes bot attacks and exceeding the query limit. !-->
 <script>
-    function checkEnter(event) {
+    async function checkEnter(event) {
         if (event.key === "Enter") {
-            checkDomainAvailability();
+            await checkDomainAvailability();
         }
     }
 
-    function checkDomainAvailability() {
+    async function checkDomainAvailability() {
         const input = document.getElementById("domainInput");
         const resultDiv = document.getElementById("result");
 
@@ -90,28 +89,21 @@
             return;
         }
 
-        const apiUrl = "https://domainr.p.rapidapi.com/v2/status?mashape-key=34269813aamsha041f48f0401a5dp14f6a2jsnb1d9e3a03d71&domain=" + domainName;
-        fetch(apiUrl, {
-            method: "GET",
-            headers: {
-                "X-RapidAPI-Host": "domainr.p.rapidapi.com",
-                "X-RapidAPI-Key": "34269813aamsha041f48f0401a5dp14f6a2jsnb1d9e3a03d71"
-            }
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.status[0].status === "inactive" || data.status[0].status === "undelegated inactive") {
+        try {
+            const response = await fetch(`/checkDomainAvailability?domain=${domainName}`);
+            const data = await response.json();
+
+            if (data.status === "inactive" || data.status === "undelegated inactive") {
                 resultDiv.innerHTML = "<p class='available'>Wolna!</p>";
-            } else if (data.status[0].status === "unknown") {
+            } else if (data.status === "unknown") {
                 resultDiv.innerHTML = "<p class='unavailable'>Wystąpił błąd (rozszerzenie nie istnieje lub nie ma połączenia z API).</p>";
             } else {
                 resultDiv.innerHTML = "<p class='unavailable'>Zajęta!</p>";
             }
-        })
-        .catch(error => {
+        } catch (error) {
             console.error("Błąd podczas sprawdzania dostępności domeny:", error);
             resultDiv.innerHTML = "<p class='unavailable'>Wystąpił błąd (rozszerzenie nie istnieje lub nie ma połączenia z API).</p>";
-        });
+        }
     }
 </script>
 
