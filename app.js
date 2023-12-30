@@ -26,13 +26,13 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.get('/checkDomainAvailability', async (req, res) => {
     const domainName = req.query.domain;
-    const apiUrl = `https://domainr.p.rapidapi.com/v2/status?mashape-key=a1424a33c8msh0781cc06fa61e8bp12852cjsn83fdd171a4fc&domain=${domainName}`;
+    const apiUrl = `https://domainr.p.rapidapi.com/v2/status?mashape-key=[API_KEY]&domain=${domainName}`;
 
     try {
         const response = await axios.get(apiUrl, {
             headers: {
                 "X-RapidAPI-Host": "domainr.p.rapidapi.com",
-                "X-RapidAPI-Key": "a1424a33c8msh0781cc06fa61e8bp12852cjsn83fdd171a4fc"
+                "X-RapidAPI-Key": "[API_KEY]"
             }
         });
 
