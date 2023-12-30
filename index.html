@@ -48,13 +48,7 @@
 <script>
     let isChecking = false;
 
-    async function checkEnter(event) {
-        if (event.key === "Enter") {
-            await checkDomainAvailability();
-        }
-    }
-
-    async function checkDomainAvailability() {
+    async function validateAndCheckDomain() {
         if (isChecking) {
             alert("Za szybko! Sprawdzać dostępność domeny możesz co 10 sekund. Poczekaj i spróbuj ponownie.");
             return;
@@ -67,6 +61,12 @@
         const domainName = input.value.trim();
         if (domainName === "") {
             alert("Musisz wprowadzić nazwę domeny.");
+            return;
+        }
+
+        const domainRegex = /^[a-zA-Z0-9-]+\.[a-zA-Z]{2,}$/;
+        if (!domainRegex.test(domainName)) {
+            alert("Wprowadź poprawną nazwę domeny.");
             return;
         }
 
@@ -90,13 +90,19 @@
                 }
             }
         } catch (error) {
-            console.error("Błąd podczas sprawdzania dostępności domeny:", error);
+            console.error("Błąd podczas sprawdzania dostępności domeny:", error, ".");
             loadingMessage.style.display = "none";
         }
 
         setTimeout(() => {
             isChecking = false;
         }, 10000); // 10 sekund
+    }
+
+    function checkEnter(event) {
+        if (event.key === "Enter") {
+            validateAndCheckDomain();
+        }
     }
 </script>
 
