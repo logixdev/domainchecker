@@ -46,10 +46,13 @@
 </footer>
 
 <script>
-    let isChecking = false;
+    let lastCheckTime = 0;
 
     async function validateAndCheckDomain() {
-        if (isChecking) {
+        const currentTime = Date.now();
+        const cooldownTime = 10000; // 10 sekund
+
+        if (currentTime - lastCheckTime < cooldownTime) {
             alert("Za szybko! Sprawdzać dostępność domeny możesz co 10 sekund. Poczekaj i spróbuj ponownie.");
             return;
         }
@@ -69,8 +72,6 @@
             alert("Wprowadź poprawną nazwę domeny.");
             return;
         }
-
-        isChecking = true;
 
         loadingMessage.style.display = "block";
 
@@ -94,9 +95,7 @@
             loadingMessage.style.display = "none";
         }
 
-        setTimeout(() => {
-            isChecking = false;
-        }, 10000); // 10 sekund
+        lastCheckTime = currentTime;
     }
 
     function checkEnter(event) {
